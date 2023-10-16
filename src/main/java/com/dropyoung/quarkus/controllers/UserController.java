@@ -6,6 +6,8 @@ import com.dropyoung.quarkus.models.User;
 import com.dropyoung.quarkus.payload.ApiResponse;
 import com.dropyoung.quarkus.services.IUserService;
 import com.dropyoung.quarkus.utils.PasswordEncoder;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -44,7 +46,9 @@ public class UserController {
     }
 
     @PUT
+    @Transactional
     @Path("update")
+    @RolesAllowed({"ADMIN", "NORMAL"})
     public Response updateUser(
             @Valid UpdateUserDTO dto,
             @Context SecurityContext ctx
@@ -77,9 +81,10 @@ public class UserController {
     }
 
     @DELETE
+    @RolesAllowed({"ADMIN", "NORMAL"})
     public Response delete(
             @Context SecurityContext ctx
-    ){
+    ) {
         this.userService.delete(UUID.fromString(ctx.getUserPrincipal().getName()));
         return Response.status(Response.Status.OK).entity(ApiResponse.success("User deleted successfully")).build();
     }

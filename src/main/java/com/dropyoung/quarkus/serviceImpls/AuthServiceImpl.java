@@ -45,7 +45,7 @@ public class AuthServiceImpl implements IAuthService {
     public String initiatePasswordReset(String email) {
         User user = this.userRepository.findByEmail(email);
         if (user == null) throw new CustomBadRequestException("Invalid email");
-        String passwordResetCode = String.format("%04d", new Random().nextInt(10000));
+        String passwordResetCode = String.format("%06d", new Random().nextInt(1000000));
         user.setPasswordResetCode(passwordResetCode);
         user.setPasswordResetStatus(EPasswordResetStatus.PENDING);
         this.userRepository.persist(user);
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements IAuthService {
         user.setPasswordResetStatus(EPasswordResetStatus.NOT_REQUESTED);
         user.setPasswordResetCode(null);
         this.userRepository.persist(user);
-        this.mailService.sendEmailVerifiedSuccessfullyMail(user.getEmail(), user.getNames());
+        this.mailService.sendPasswordResetSuccessfullyMail(user.getEmail(), user.getNames());
         return "Password reset successfully";
     }
 
@@ -69,12 +69,12 @@ public class AuthServiceImpl implements IAuthService {
     public String initiateEmailVerification(UUID id) {
         User user = this.userRepository.findById(id);
         if (user == null) throw new CustomBadRequestException("Invalid user");
-        String verificationCode = String.format("%04d", new Random().nextInt(10000));
+        String verificationCode = String.format("%06d", new Random().nextInt(1000000));
         user.setVerificationStatus(EVerificationStatus.PENDING);
         user.setVerificationCode(verificationCode);
         this.userRepository.persist(user);
         mailService.sendInitiateEmailVerificationMail(user.getEmail(), user.getNames(), verificationCode);
-        return "Password reset code sent to email";
+        return "Email verification code sent to your email";
     }
 
     @Override
