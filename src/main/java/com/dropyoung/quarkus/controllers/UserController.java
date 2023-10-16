@@ -6,8 +6,6 @@ import com.dropyoung.quarkus.models.User;
 import com.dropyoung.quarkus.payload.ApiResponse;
 import com.dropyoung.quarkus.services.IUserService;
 import com.dropyoung.quarkus.utils.PasswordEncoder;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -20,7 +18,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import java.util.Collections;
 import java.util.UUID;
 
-@ApplicationScoped
 @Tag(ref = "Users")
 @Path("users")
 @RequiredArgsConstructor
@@ -28,7 +25,7 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserController {
 
-    private IUserService userService;
+    private final IUserService userService;
     private final PasswordEncoder passwordEncoder;
 
     @POST

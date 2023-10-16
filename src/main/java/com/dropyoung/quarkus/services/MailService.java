@@ -2,8 +2,10 @@ package com.dropyoung.quarkus.services;
 
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.reactive.ReactiveMailer;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class MailService {
     @Inject
     ReactiveMailer mailer;

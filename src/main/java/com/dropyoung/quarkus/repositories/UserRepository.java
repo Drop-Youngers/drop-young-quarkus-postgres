@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 
 import java.util.UUID;
 
+@Transactional
+@ApplicationScoped
 public class UserRepository implements PanacheRepositoryBase<User, UUID> {
 
     public User findByEmail(String email) {

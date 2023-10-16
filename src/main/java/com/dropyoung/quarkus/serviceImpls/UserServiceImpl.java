@@ -1,13 +1,16 @@
 package com.dropyoung.quarkus.serviceImpls;
 
+import com.dropyoung.quarkus.exceptions.CustomBadRequestException;
 import com.dropyoung.quarkus.models.User;
 import com.dropyoung.quarkus.repositories.UserRepository;
 import com.dropyoung.quarkus.services.IUserService;
+import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
 
+@ApplicationScoped
 @RequiredArgsConstructor
 public class UserServiceImpl implements IUserService {
 
@@ -15,7 +18,13 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User create(User user) {
-        return null;
+        try {
+            this.userRepository.persist(user);
+            return user;
+        } catch (Exception e) {
+            System.out.println(e.getCause().toString());
+            throw new CustomBadRequestException(e.getMessage());
+        }
     }
 
     @Override
@@ -29,7 +38,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> findAll() {
         return this.userRepository.listAll();
     }
 
