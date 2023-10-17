@@ -28,7 +28,7 @@ public class FileController {
 
     @GET
     @Path("all")
-//    @RolesAllowed({"ADMIN"})
+    @RolesAllowed({"ADMIN"})
     public Response getAllFiles() {
         return Response.ok(ApiResponse.success("Files fetched successfully", this.fileService.findAll())).build();
     }
