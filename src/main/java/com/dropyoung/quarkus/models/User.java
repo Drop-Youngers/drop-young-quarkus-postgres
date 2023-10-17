@@ -51,7 +51,7 @@ public class User extends PanacheEntityBase {
     private EPasswordResetStatus passwordResetStatus = EPasswordResetStatus.NOT_REQUESTED;
 
     @JoinColumn(name = "profile_image_id")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private File profileImage;
 

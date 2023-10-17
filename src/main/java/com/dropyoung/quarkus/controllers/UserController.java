@@ -5,6 +5,7 @@ import com.dropyoung.quarkus.dtos.UpdateUserDTO;
 import com.dropyoung.quarkus.models.User;
 import com.dropyoung.quarkus.payload.ApiResponse;
 import com.dropyoung.quarkus.services.IUserService;
+import com.dropyoung.quarkus.utils.MultipartBody;
 import com.dropyoung.quarkus.utils.PasswordEncoder;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
@@ -15,7 +16,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import java.util.Collections;
 import java.util.UUID;
@@ -78,6 +84,21 @@ public class UserController {
     @Path("all")
     public Response findAll() {
         return Response.status(Response.Status.OK).entity(ApiResponse.success("Users found", this.userService.findAll())).build();
+    }
+
+    @POST
+    @Transactional
+    @Path("upload-profile")
+    @RolesAllowed({"ADMIN", "NORMAL"})
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @RequestBody(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA,
+            schema = @Schema(implementation = MultipartBody.class))
+    )
+    public Response uploadProfile(
+            @MultipartForm MultipartFormDataInput body,
+            @Context SecurityContext ctx
+    ) {
+        return Response.status(Response.Status.OK).entity(ApiResponse.success("Profile picture uploaded successfully", this.userService.uploadProfile(UUID.fromString(ctx.getUserPrincipal().getName()), body))).build();
     }
 
     @DELETE

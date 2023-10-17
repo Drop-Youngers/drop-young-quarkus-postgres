@@ -3,7 +3,6 @@ package com.dropyoung.quarkus.services;
 import com.dropyoung.quarkus.exceptions.CustomInternalServerException;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
-import io.quarkus.mailer.reactive.ReactiveMailer;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

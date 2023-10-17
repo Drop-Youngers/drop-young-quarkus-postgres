@@ -2,7 +2,6 @@ package com.dropyoung.quarkus.mappers;
 
 
 import com.dropyoung.quarkus.exceptions.CustomInternalServerException;
-import com.dropyoung.quarkus.exceptions.CustomNotfoundException;
 import com.dropyoung.quarkus.payload.ApiResponse;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;

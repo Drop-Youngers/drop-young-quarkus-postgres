@@ -1,13 +1,15 @@
 package com.dropyoung.quarkus.serviceImpls;
 
 import com.dropyoung.quarkus.exceptions.CustomBadRequestException;
+import com.dropyoung.quarkus.models.File;
 import com.dropyoung.quarkus.models.User;
 import com.dropyoung.quarkus.repositories.UserRepository;
+import com.dropyoung.quarkus.services.IFileService;
 import com.dropyoung.quarkus.services.IUserService;
 import com.dropyoung.quarkus.services.MailService;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +21,7 @@ public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
     private final MailService mailService;
+    private final IFileService fileService;
 
     @Override
     public User create(User user) {
@@ -44,6 +47,15 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User findById(UUID id) {
         return this.userRepository.findById(id);
+    }
+
+    @Override
+    public User uploadProfile(UUID id, MultipartFormDataInput input) {
+        User user = this.userRepository.findById(id);
+        File file = this.fileService.save(user, input);
+        user.setProfileImage(file);
+        this.userRepository.persist(user);
+        return user;
     }
 
     @Override

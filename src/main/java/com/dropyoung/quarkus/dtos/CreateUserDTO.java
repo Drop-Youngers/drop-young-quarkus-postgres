@@ -2,17 +2,12 @@ package com.dropyoung.quarkus.dtos;
 
 import com.dropyoung.quarkus.enums.EGender;
 import com.dropyoung.quarkus.enums.ERole;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
-
-import java.util.Set;
 
 @Data
 public class CreateUserDTO {

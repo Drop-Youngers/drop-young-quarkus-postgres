@@ -1,7 +1,6 @@
 package com.dropyoung.quarkus.dtos;
 
 import com.dropyoung.quarkus.enums.EGender;
-import com.dropyoung.quarkus.enums.ERole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;

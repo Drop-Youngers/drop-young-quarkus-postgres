@@ -19,8 +19,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "files")
 public class File extends PanacheEntityBase {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
 
@@ -51,10 +51,11 @@ public class File extends PanacheEntityBase {
     @Column(name = "created_at", nullable = false, updatable = false)
     private String createdAt;
 
+    @JoinColumn(name = "uploaded_by", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User uploadedBy;
+
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = false)
     private String updatedAt;
-    public String getUrl() {
-        return "http://localhost:8084/api/v1/files/load-file/" + "/" + this.getName();
-    }
 }

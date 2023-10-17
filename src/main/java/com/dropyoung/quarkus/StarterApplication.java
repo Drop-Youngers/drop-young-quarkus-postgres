@@ -11,7 +11,8 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @OpenAPIDefinition(
         tags = {
                 @Tag(name = "Auth", description = "Authentication operations."),
-                @Tag(name = "Users", description = "User operations.")
+                @Tag(name = "Users", description = "User operations."),
+                @Tag(name = "Files", description = "File operations.")
         },
         info = @Info(
                 title = "Quarkus Starter API",
