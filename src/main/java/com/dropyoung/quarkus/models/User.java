@@ -5,6 +5,7 @@ import com.dropyoung.quarkus.enums.EGender;
 import com.dropyoung.quarkus.enums.EPasswordResetStatus;
 import com.dropyoung.quarkus.enums.ERole;
 import com.dropyoung.quarkus.enums.EVerificationStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,8 +53,8 @@ public class User extends PanacheEntityBase {
     private EPasswordResetStatus passwordResetStatus = EPasswordResetStatus.NOT_REQUESTED;
 
     @JoinColumn(name = "profile_image_id")
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private File profileImage;
 
     @Column(unique = true, nullable = true, updatable = true, name = "verification_code")

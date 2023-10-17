@@ -3,6 +3,8 @@ package com.dropyoung.quarkus.controllers;
 import com.dropyoung.quarkus.models.File;
 import com.dropyoung.quarkus.payload.ApiResponse;
 import com.dropyoung.quarkus.services.IFileService;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -19,13 +21,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileController {
 
-    @ConfigProperty(name = "uploads.directory")
+    @ConfigProperty(name = "profiles.uploads.directory")
     String uploadsDirectory;
 
     private final IFileService fileService;
 
     @GET
     @Path("all")
+//    @RolesAllowed({"ADMIN"})
     public Response getAllFiles() {
         return Response.ok(ApiResponse.success("Files fetched successfully", this.fileService.findAll())).build();
     }
@@ -55,6 +58,7 @@ public class FileController {
     }
 
     @DELETE
+    @Transactional
     @Path("{id}")
     public Response deleteFile(
             @PathParam("id") UUID id

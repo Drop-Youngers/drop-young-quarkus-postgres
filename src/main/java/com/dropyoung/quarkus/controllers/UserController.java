@@ -2,6 +2,7 @@ package com.dropyoung.quarkus.controllers;
 
 import com.dropyoung.quarkus.dtos.CreateUserDTO;
 import com.dropyoung.quarkus.dtos.UpdateUserDTO;
+import com.dropyoung.quarkus.exceptions.CustomInternalServerException;
 import com.dropyoung.quarkus.models.User;
 import com.dropyoung.quarkus.payload.ApiResponse;
 import com.dropyoung.quarkus.services.IUserService;
@@ -98,7 +99,11 @@ public class UserController {
             @MultipartForm MultipartFormDataInput body,
             @Context SecurityContext ctx
     ) {
-        return Response.status(Response.Status.OK).entity(ApiResponse.success("Profile picture uploaded successfully", this.userService.uploadProfile(UUID.fromString(ctx.getUserPrincipal().getName()), body))).build();
+        try {
+            return Response.status(Response.Status.OK).entity(ApiResponse.success("Profile picture uploaded successfully", this.userService.uploadProfile(UUID.fromString(ctx.getUserPrincipal().getName()), body))).build();
+        } catch (Exception e) {
+            throw new CustomInternalServerException(e.getMessage());
+        }
     }
 
     @DELETE

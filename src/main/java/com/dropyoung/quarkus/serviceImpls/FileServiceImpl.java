@@ -30,8 +30,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileServiceImpl implements IFileService {
 
-    @ConfigProperty(name = "uploads.directory")
+    @ConfigProperty(name = "profiles.uploads.directory")
     String uploadDirectory;
+
+    @ConfigProperty(name = "deleted.uploads.directory")
+    String deletedUploadsDirectory;
 
     @ConfigProperty(name = "server.path")
     String serverPath;
@@ -40,7 +43,7 @@ public class FileServiceImpl implements IFileService {
 
     @Override
     @Transactional
-    public File save(User uploadedBy, MultipartFormDataInput input) {
+    public File save(UUID uploadedById, MultipartFormDataInput input) {
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         List<String> fileNames = new ArrayList<>();
         List<InputPart> inputParts = uploadForm.get("file");
@@ -62,8 +65,7 @@ public class FileServiceImpl implements IFileService {
                 file.setType(Files.probeContentType(Paths.get(uploadDirectory + "/" + fileName)));
                 file.setStatus(EFileStatus.SAVED);
                 file.setUrl(serverPath + "/files/load-file/" + fileId);
-                file.setUploadedBy(uploadedBy);
-
+                file.setUploadedById(uploadedById.toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new CustomBadRequestException(e.getMessage());
@@ -109,6 +111,11 @@ public class FileServiceImpl implements IFileService {
 
     @Override
     public void delete(UUID id) {
+        java.io.File deleted = new java.io.File(uploadDirectory, this.fileRepository.findById(id).getName());
+        boolean isMoved = deleted.renameTo(new java.io.File(deletedUploadsDirectory,  deleted.getName()));
         this.fileRepository.deleteById(id);
+        if (!isMoved) {
+            throw new CustomBadRequestException("Failed to remove file on disk");
+        }
     }
 }

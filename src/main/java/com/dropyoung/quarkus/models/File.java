@@ -51,9 +51,12 @@ public class File extends PanacheEntityBase {
     @Column(name = "created_at", nullable = false, updatable = false)
     private String createdAt;
 
-    @JoinColumn(name = "uploaded_by", referencedColumnName = "id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User uploadedBy;
+    /*
+    Used UUID because in the profileImage property of User
+    will call file and file will still reference user, which will cause infinite nesting.
+    Hence, causing serialization errors.
+    */
+    private String uploadedById;
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = false)

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface IFileService {
 
-    File save(User uploadedBy, MultipartFormDataInput input);
+    File save(UUID uploadedById, MultipartFormDataInput input);
 
     List<File> findAll();
 

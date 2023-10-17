@@ -51,8 +51,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User uploadProfile(UUID id, MultipartFormDataInput input) {
+        File file = this.fileService.save(id, input);
         User user = this.userRepository.findById(id);
-        File file = this.fileService.save(user, input);
         user.setProfileImage(file);
         this.userRepository.persist(user);
         return user;
